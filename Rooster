@@ -1,1 +1,203 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Efteling Personeelsbeheer</title>
+    <style>
+        :root {
+            --efteling-orange: #e67e22;
+            --efteling-gold: #f1c40f;
+            --efteling-dark: #2c3e50;
+            --efteling-cream: #fdf5e6;
+            --efteling-white: #ffffff;
+        }
 
+        body {
+            font-family: 'Garamond', serif;
+            background-color: var(--efteling-cream);
+            background-image: radial-gradient(circle, #fdf5e6 0%, #faebd7 100%);
+            color: var(--efteling-dark);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: var(--efteling-white);
+            border: 4px double var(--efteling-gold);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--efteling-orange);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .login-section, .dashboard-section {
+            display: none;
+        }
+
+        .active {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid var(--efteling-gold);
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+
+        button {
+            background: var(--efteling-orange);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            transition: transform 0.2s, background 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        button:hover {
+            background: #d35400;
+            transform: translateY(-2px);
+        }
+
+        .log-table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .log-table th, .log-table td {
+            border: 1px solid var(--efteling-gold);
+            padding: 8px;
+            text-align: left;
+        }
+
+        .log-table th {
+            background-color: var(--efteling-gold);
+            color: var(--efteling-dark);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="login-section" class="active">
+        <h1>Het Rooster Rijk</h1>
+        <p>Voer de magische woorden in om te beginnen.</p>
+        <input type="text" id="username" placeholder="Gebruikersnaam (Admin)">
+        <input type="password" id="password" placeholder="Wachtwoord (WB)">
+        <button onclick="checkLogin()">Ontgrendel de Poort</button>
+        <p id="error-msg" style="color: red; margin-top: 10px;"></p>
+    </div>
+
+    <div id="dashboard-section">
+        <h1>Beheerpaneel</h1>
+        <p>Voeg medewerkers toe aan het rijk.</p>
+        
+        <div style="border-top: 2px solid var(--efteling-gold); padding-top: 20px;">
+            <input type="text" id="empName" placeholder="Naam Medewerker">
+            <select id="empRole">
+                <option value="Dienst">Reguliere Dienst</option>
+                <option value="Vergadering">Vergadering</option>
+                <option value="Training">Training</option>
+            </select>
+            <button onclick="addEmployee()">Voeg Toe</button>
+        </div>
+
+        <h3>Recente Toevoegingen</h3>
+        <table class="log-table">
+            <thead>
+                <tr>
+                    <th>Naam</th>
+                    <th>Type</th>
+                    <th>Tijd</th>
+                </tr>
+            </thead>
+            <tbody id="log-body">
+                </tbody>
+        </table>
+        
+        <button onclick="logout()" style="background: var(--efteling-dark); margin-top: 20px;">Verlaat het Rijk</button>
+    </div>
+</div>
+
+<script>
+    // Inloggen
+    function checkLogin() {
+        const u = document.getElementById('username').value;
+        const p = document.getElementById('password').value;
+
+        if (u === "Admin" && p === "WB") {
+            document.getElementById('login-section').classList.remove('active');
+            document.getElementById('dashboard-section').classList.add('active');
+            loadLogs();
+        } else {
+            document.getElementById('error-msg').innerText = "De poort blijft gesloten. Probeer het opnieuw.";
+        }
+    }
+
+    // Medewerker toevoegen (Slaat op in LocalStorage)
+    function addEmployee() {
+        const name = document.getElementById('empName').value;
+        const role = document.getElementById('empRole').value;
+        const time = new Date().toLocaleTimeString();
+
+        if (name === "") return alert("Geef de medewerker een naam!");
+
+        const newLog = { name, role, time };
+        let logs = JSON.parse(localStorage.getItem('roosterLogs')) || [];
+        logs.unshift(newLog); // Voeg toe aan begin van de lijst
+        localStorage.setItem('roosterLogs', JSON.stringify(logs));
+
+        document.getElementById('empName').value = "";
+        loadLogs();
+    }
+
+    // Logs laden
+    function loadLogs() {
+        const logBody = document.getElementById('log-body');
+        const logs = JSON.parse(localStorage.getItem('roosterLogs')) || [];
+        
+        logBody.innerHTML = logs.slice(0, 5).map(log => `
+            <tr>
+                <td>${log.name}</td>
+                <td>${log.role}</td>
+                <td>${log.time}</td>
+            </tr>
+        `).join('');
+    }
+
+    function logout() {
+        location.reload();
+    }
+</script>
+
+</body>
+</html>
