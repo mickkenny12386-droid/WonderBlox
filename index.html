@@ -3,189 +3,238 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WonderBlox - Het Rijk der Fantasie</title>
+    <title>WonderBlox - Danse Macabre Beheer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,700;1,400&family=Metamorphic&display=swap" rel="stylesheet">
     <style>
-        /* Efteling & Danse Macabre Stijl */
         :root {
-            --efteling-gold: #c5a059;
-            --efteling-dark: #1a1a1a;
-            --efteling-orange: #e67e22;
-            --spooky-green: #2ecc71;
+            --gold: #d4af37;
+            --dark-red: #4a0404;
+            --bg-dark: #0a0a0a;
+            --panel-bg: rgba(20, 20, 20, 0.95);
+            --text: #e0e0e0;
         }
 
         body, html {
             margin: 0; padding: 0;
             font-family: 'Crimson Text', serif;
-            background-color: var(--efteling-dark);
-            color: white;
+            background-color: var(--bg-dark);
+            color: var(--text);
             scroll-behavior: smooth;
         }
 
-        /* Hero Sectie met jouw foto */
+        /* Home Sectie */
         .hero {
             height: 100vh;
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
-                        url('https://i.postimg.cc/9M3XzW1V/danse-macabre.jpg'); /* Vervang door jouw eigen link of background.jpg */
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('bg.jpg');
+            background-size: cover; background-position: center;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; border-bottom: 5px solid var(--gold);
         }
 
-        .hero h1 { font-size: 5rem; color: var(--efteling-gold); margin: 0; text-shadow: 3px 3px 10px black; }
-        .hero p { font-size: 1.5rem; font-style: italic; }
-
-        /* Navigatie */
-        nav {
-            position: absolute; top: 20px; width: 100%;
-            display: flex; justify-content: center; gap: 30px;
-        }
-        nav a { color: var(--efteling-gold); text-decoration: none; font-weight: bold; font-size: 1.2rem; cursor: pointer; }
-
-        /* Secties */
-        .section { padding: 80px 20px; max-width: 1000px; margin: auto; text-align: center; }
-        .btn { 
-            background: var(--efteling-gold); color: var(--efteling-dark); 
-            padding: 15px 30px; border: none; border-radius: 50px; 
-            font-weight: bold; cursor: pointer; transition: 0.3s;
-        }
-        .btn:hover { background: white; transform: scale(1.1); }
-
-        /* Login & Admin Panel - Verborgen */
-        #admin-panel, #login-overlay { display: none; }
+        .hero h1 { font-family: 'Metamorphic', serif; font-size: 5rem; color: var(--gold); margin: 0; }
         
-        .modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 1000;
-            display: flex; justify-content: center; align-items: center;
-        }
-        .modal-content {
-            background: #2c3e50; padding: 40px; border: 2px solid var(--efteling-gold);
-            border-radius: 15px; width: 300px; text-align: center;
-        }
+        nav { position: fixed; top: 0; width: 100%; background: rgba(0,0,0,0.8); padding: 15px; z-index: 100; text-align: center; border-bottom: 1px solid var(--gold); }
+        nav a { color: var(--gold); text-decoration: none; margin: 0 20px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; }
 
-        input, select { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: none; }
+        /* Dashboard Lay-out */
+        #admin-panel { display: none; padding: 100px 20px 50px; min-height: 100vh; background: #151515; }
+        .grid { display: grid; grid-template-columns: 300px 1fr; gap: 20px; max-width: 1400px; margin: auto; }
 
-        .job-card {
-            background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px;
-            border-left: 5px solid var(--efteling-gold); margin-bottom: 10px; text-align: left;
-        }
+        /* Kaarten & Panelen */
+        .card { background: var(--panel-bg); border: 1px solid var(--gold); border-radius: 8px; padding: 20px; box-shadow: 0 0 15px rgba(0,0,0,0.5); }
+        .sidebar { height: fit-content; }
+        h2, h3 { color: var(--gold); font-family: 'Metamorphic', serif; border-bottom: 1px solid var(--dark-red); padding-bottom: 10px; }
+
+        /* Medewerkers & Interactie */
+        .staff-item { padding: 10px; border-bottom: 1px solid #333; cursor: pointer; transition: 0.3s; }
+        .staff-item:hover { background: var(--dark-red); color: white; }
+        
+        .status-btn { padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer; margin-right: 5px; font-weight: bold; }
+        .btn-absent { background: #c0392b; color: white; }
+        .btn-late { background: #f39c12; color: white; }
+        .btn-present { background: #27ae60; color: white; }
+
+        input, select, textarea { width: 100%; padding: 10px; margin-bottom: 10px; background: #222; border: 1px solid var(--gold); color: white; border-radius: 4px; }
+        .primary-btn { background: var(--gold); color: black; border: none; padding: 12px; width: 100%; cursor: pointer; font-weight: bold; text-transform: uppercase; }
+
+        /* Login Modal */
+        #login-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; }
+        .login-box { background: var(--panel-bg); border: 2px solid var(--gold); padding: 40px; border-radius: 10px; width: 350px; text-align: center; }
     </style>
 </head>
 <body>
 
-    <div id="main-page">
-        <nav>
-            <a href="#vacatures">Vacatures</a>
-            <a onclick="showLogin()">Medewerkers</a>
-        </nav>
+    <nav>
+        <a href="#main-page">Home</a>
+        <a href="#solliciteren">Vacatures</a>
+        <a onclick="showLogin()">Bestuur</a>
+    </nav>
 
+    <div id="main-page">
         <div class="hero">
             <h1>WonderBlox</h1>
-            <p>De muziek stopt nooit in Danse Macabre...</p>
-            <br>
-            <a href="#vacatures" class="btn">Word onderdeel van de magie</a>
+            <p style="font-size: 1.5rem; color: var(--gold);">Het Rijk der Fantasie & Danse Macabre</p>
         </div>
 
-        <div id="vacatures" class="section">
-            <h2 style="color: var(--efteling-gold);">Openstaande Vacatures</h2>
-            <div class="job-card">
-                <h3>Gastheer/Vrouw Danse Macabre</h3>
-                <p>Begeleid gasten door het koor terwijl het draaiorgel speelt. (Positie: Wachtrij/Attractie)</p>
-            </div>
-            <div class="job-card">
-                <h3>Entertainment Rijk der Fantasie</h3>
-                <p>Breng de bewoners van WonderBlox tot leven.</p>
-            </div>
+        <div id="solliciteren" style="padding: 100px 20px; text-align: center; max-width: 800px; margin: auto;">
+            <h2>Sollicitatie Formulier</h2>
+            <p>Wil jij werken bij de spannendste attractie van WonderBlox?</p>
+            <input type="text" id="solName" placeholder="Jouw Naam">
+            <select id="solPos">
+                <option value="Horeca">Horeca</option>
+                <option value="Attractie">Attractie Medewerker</option>
+                <option value="Entertainment">Entertainment / Acteur</option>
+            </select>
+            <textarea id="solMsg" rows="4" placeholder="Waarom wil je bij ons werken?"></textarea>
+            <button class="primary-btn" onclick="submitApplication()">Verstuur Magische Brief</button>
         </div>
     </div>
 
-    <div id="login-overlay" class="modal">
-        <div class="modal-content">
-            <h2 style="color: var(--efteling-gold);">Personeels Login</h2>
+    <div id="login-overlay">
+        <div class="login-box">
+            <h2 style="margin-top:0">Poort Bewaker</h2>
             <input type="text" id="user" placeholder="Gebruikersnaam">
             <input type="password" id="pass" placeholder="Wachtwoord">
-            <button class="btn" onclick="attemptLogin()">Inloggen</button>
-            <button onclick="hideLogin()" style="background:none; color:white; border:none; margin-top:10px; cursor:pointer;">Terug</button>
-            <p id="err" style="color: red; font-size: 0.8rem;"></p>
+            <button class="primary-btn" onclick="attemptLogin()">Ontgrendel Rijk</button>
+            <p id="err" style="color:red; margin-top:10px"></p>
+            <button onclick="hideLogin()" style="background:none; color:grey; border:none; cursor:pointer;">Annuleren</button>
         </div>
     </div>
 
-    <div id="admin-panel" class="section">
-        <h1 style="color: var(--efteling-gold);">WonderBlox Bestuur</h1>
-        <p>Welkom, Mickkenny.</p>
+    <div id="admin-panel">
+        <div class="grid">
+            <div class="sidebar">
+                <div class="card">
+                    <h3>Medewerkers</h3>
+                    <div id="staff-list-display"></div>
+                    <hr>
+                    <h4>Nieuwe Medewerker</h4>
+                    <input type="text" id="newStaffName" placeholder="Naam">
+                    <select id="newStaffRole">
+                        <option value="Horeca">Horeca</option>
+                        <option value="Entertainment">Entertainment</option>
+                        <option value="Attractie">Attractie</option>
+                    </select>
+                    <button class="primary-btn" onclick="addStaffMember()">Toevoegen</button>
+                </div>
+            </div>
 
-        <div class="job-card">
-            <h3>Medewerker Toevoegen / Roosteren</h3>
-            <input type="text" id="newStaffName" placeholder="Naam Medewerker">
-            <input type="text" id="newStaffCode" placeholder="Persoonlijke Inlogcode">
-            <select id="position">
-                <option value="Horeca">Horeca</option>
-                <option value="Entertainment">Entertainment</option>
-                <option value="Wachtrij">Wachtrij</option>
-                <option value="Attractie">Attractie (Danse Macabre)</option>
-                <option value="Techniek">Techniek</option>
-            </select>
-            <button class="btn" onclick="saveStaff()">Voeg toe aan Rooster</button>
+            <div class="main-content">
+                <div class="card" id="details-pane">
+                    <h2>Bestuursoverzicht</h2>
+                    <p>Selecteer een medewerker om het rooster te beheren of status te wijzigen.</p>
+                </div>
+
+                <div class="card" style="margin-top: 20px;">
+                    <h3>Ingekomen Sollicitaties</h3>
+                    <div id="application-list"></div>
+                </div>
+            </div>
         </div>
-
-        <h3>Huidig Personeelsbestand</h3>
-        <div id="staffList"></div>
-        
-        <br>
-        <button onclick="location.reload()" class="btn" style="background: #c0392b;">Uitloggen</button>
+        <center><button onclick="location.reload()" style="margin-top:20px; color:var(--gold); background:none; border:1px solid var(--gold); padding:10px; cursor:pointer;">Uitloggen</button></center>
     </div>
 
     <script>
+        // DATA OPSLAG (Browser)
+        let staff = JSON.parse(localStorage.getItem('wb_staff')) || [];
+        let applications = JSON.parse(localStorage.getItem('wb_apps')) || [];
+
         function showLogin() { document.getElementById('login-overlay').style.display = 'flex'; }
         function hideLogin() { document.getElementById('login-overlay').style.display = 'none'; }
 
         function attemptLogin() {
-            const u = document.getElementById('user').value;
-            const p = document.getElementById('pass').value;
-
-            // Jouw specifieke inlog
-            if (u === "mickkenny" && p === "Kenny12!") {
+            if(document.getElementById('user').value === "mickkenny" && document.getElementById('pass').value === "Kenny12!") {
                 document.getElementById('main-page').style.display = 'none';
                 document.getElementById('login-overlay').style.display = 'none';
                 document.getElementById('admin-panel').style.display = 'block';
+                renderDashboard();
             } else {
-                document.getElementById('err').innerText = "Onjuiste inloggegevens.";
+                document.getElementById('err').innerText = "Foutief wachtwoord!";
             }
         }
 
-        function saveStaff() {
-            const name = document.getElementById('newStaffName').value;
-            const code = document.getElementById('newStaffCode').value;
-            const pos = document.getElementById('position').value;
-
-            if(!name || !code) return alert("Vul alles in!");
-
-            const staffMember = { name, code, pos };
-            let currentStaff = JSON.parse(localStorage.getItem('wonderblox_staff')) || [];
-            currentStaff.push(staffMember);
-            localStorage.setItem('wonderblox_staff', JSON.stringify(currentStaff));
-
-            alert(name + " is toegevoegd aan het rijk!");
-            renderStaff();
+        function submitApplication() {
+            const app = {
+                name: document.getElementById('solName').value,
+                pos: document.getElementById('solPos').value,
+                msg: document.getElementById('solMsg').value,
+                date: new Date().toLocaleDateString()
+            };
+            applications.push(app);
+            localStorage.setItem('wb_apps', JSON.stringify(applications));
+            alert("Je brief is ontvangen door het orgel van Danse Macabre!");
+            location.reload();
         }
 
-        function renderStaff() {
-            const list = document.getElementById('staffList');
-            let currentStaff = JSON.parse(localStorage.getItem('wonderblox_staff')) || [];
-            list.innerHTML = currentStaff.map(s => `
-                <div class="job-card">
-                    <strong>${s.name}</strong> - Positie: ${s.pos} <br>
-                    <small>Inlogcode: ${s.code}</small>
+        function addStaffMember() {
+            const s = {
+                id: Date.now(),
+                name: document.getElementById('newStaffName').value,
+                role: document.getElementById('newStaffRole').value,
+                status: 'Present',
+                rooster: []
+            };
+            staff.push(s);
+            saveData();
+            renderDashboard();
+        }
+
+        function saveData() {
+            localStorage.setItem('wb_staff', JSON.stringify(staff));
+        }
+
+        function renderDashboard() {
+            const list = document.getElementById('staff-list-display');
+            list.innerHTML = staff.map(s => `
+                <div class="staff-item" onclick="showStaffDetails(${s.id})">
+                    <strong>${s.name}</strong><br><small>${s.role} - ${s.status}</small>
+                </div>
+            `).join('');
+
+            const appList = document.getElementById('application-list');
+            appList.innerHTML = applications.map(a => `
+                <div style="padding:10px; border-bottom:1px solid var(--gold)">
+                    <strong>${a.name}</strong> (${a.pos}) - <small>${a.date}</small><br>
+                    <i>"${a.msg}"</i>
                 </div>
             `).join('');
         }
 
-        // Laad personeel als je inlogt
-        window.onload = renderStaff;
+        function showStaffDetails(id) {
+            const s = staff.find(x => x.id === id);
+            const pane = document.getElementById('details-pane');
+            pane.innerHTML = `
+                <h2>Beheer: ${s.name}</h2>
+                <p>Huidige Status: <strong>${s.status}</strong></p>
+                <button class="status-btn btn-present" onclick="updateStatus(${id}, 'Present')">Present</button>
+                <button class="status-btn btn-late" onclick="updateStatus(${id}, 'Te Laat')">Te Laat</button>
+                <button class="status-btn btn-absent" onclick="updateStatus(${id}, 'Absent')">Meld Af</button>
+                <hr>
+                <h3>Rooster Toevoegen</h3>
+                <input type="text" id="shiftTime" placeholder="Tijd (bijv. 12:00 - 18:00)">
+                <input type="text" id="shiftPos" placeholder="Positie (bijv. Ingang)">
+                <button class="primary-btn" onclick="addShift(${id})">Dienst Opslaan</button>
+                <h4>Geplande Diensten:</h4>
+                <ul>${s.rooster.map(r => `<li>${r.time} op ${r.pos}</li>`).join('')}</ul>
+            `;
+        }
+
+        function updateStatus(id, status) {
+            const s = staff.find(x => x.id === id);
+            s.status = status;
+            saveData();
+            showStaffDetails(id);
+            renderDashboard();
+        }
+
+        function addShift(id) {
+            const s = staff.find(x => x.id === id);
+            const time = document.getElementById('shiftTime').value;
+            const pos = document.getElementById('shiftPos').value;
+            s.rooster.push({time, pos});
+            saveData();
+            showStaffDetails(id);
+        }
     </script>
 </body>
 </html>
